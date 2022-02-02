@@ -6,8 +6,8 @@ namespace chess
     class ChessMatch
     {
         public Board board { get; private set; }
-        private int round;
-        private Color playerColor;
+        public int round;
+        public Color playerColor;
         public bool finished { get; private set; }
 
         public ChessMatch()
@@ -26,6 +26,32 @@ namespace chess
             pAttack.move();
             Piece pCaptured = board.deletePiece(destiny);
             board.placePiece(pAttack, destiny);
+        }
+
+        public void play(Position origin, Position destiny)
+        {
+            execMove(origin, destiny);
+            round++;
+            changePlayer();
+        }
+
+        public void validateOrigin(Position pos)
+        {
+            board.validatePosition(pos);
+            if (board.piece(pos) == null)
+                throw new BoardException($"No piece chosen");
+            if (playerColor != board.piece(pos).color)
+                throw new BoardException($"Not a {playerColor} piece");
+            if (!board.piece(pos).anyPossibleMovement())
+                throw new BoardException($"Chosen piece has no possible movements");
+        }
+
+        private void changePlayer()
+        {
+            if (playerColor == Color.White)
+                playerColor = Color.Black;
+            else
+                playerColor = Color.White;
         }
 
         private void placePieces()

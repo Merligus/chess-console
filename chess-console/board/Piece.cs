@@ -21,11 +21,21 @@
             return p == null || p.color != color;
         }
 
-        public abstract bool[,] possibleMovements();
-
         public void move()
         {
             movQtty++;
         }
+
+        public bool anyPossibleMovement()
+        {
+            bool[,] possibles = possibleMovements();
+            for (int i = 0; i < board.rows; i++)
+                for (int j = 0; j < board.columns; j++)
+                    if (possibles[i, j])
+                        return true;
+            return false;
+        }
+
+        public abstract bool[,] possibleMovements();
     }
 }

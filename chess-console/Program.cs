@@ -8,17 +8,20 @@ namespace chess_console
     {
         static void Main(string[] args)
         {
-            try
-            {
-                ChessMatch match = new ChessMatch();
+            ChessMatch match = new ChessMatch();
 
-                while (!match.finished)
+            while (!match.finished)
+            {
+                try
                 {
                     Console.Clear();
                     Display.printBoard(match.board);
+                    Console.WriteLine($"Round: {match.round}");
+                    Console.WriteLine($"Current player: {match.playerColor}");
 
                     Console.Write("\nOrigin: ");
                     Position origin = Display.readChessPosition().toPosition();
+                    match.validateOrigin(origin);
 
                     bool[,] possiblePositions = match.board.piece(origin).possibleMovements();
 
@@ -28,17 +31,18 @@ namespace chess_console
                     Console.Write("\nDestiny: ");
                     Position destiny = Display.readChessPosition().toPosition();
 
-                    match.execMove(origin, destiny);
+                    match.play(origin, destiny);
                 }
-                
-            }
-            catch (BoardException e)
-            {
-                Console.WriteLine(e.Message);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Game finished");
+                catch (BoardException e)
+                {
+                    Console.WriteLine(e.Message);
+                    Console.ReadLine();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Game finished");
+                    break;
+                }
             }
         }
     }
