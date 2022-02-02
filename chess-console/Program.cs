@@ -8,12 +8,33 @@ namespace chess_console
     {
         static void Main(string[] args)
         {
-            Board board = new Board(8, 8);
-            board.placePiece(new Rook(board, Color.Black), new Position(0, 0));
-            board.placePiece(new Rook(board, Color.Black), new Position(1, 3));
-            board.placePiece(new King(board, Color.Red), new Position(2, 4));
+            try
+            {
+                ChessMatch match = new ChessMatch();
 
-            Display.printBoard(board);
+                while (!match.finished)
+                {
+                    Console.Clear();
+                    Display.printBoard(match.board);
+
+                    Console.WriteLine();
+                    Console.Write("Origin: ");
+                    Position origin = Display.readChessPosition().toPosition();
+                    Console.Write("Destiny: ");
+                    Position destiny = Display.readChessPosition().toPosition();
+
+                    match.execMove(origin, destiny);
+                }
+                
+            }
+            catch (BoardException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Game finished");
+            }
         }
     }
 }

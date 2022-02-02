@@ -13,7 +13,11 @@
             this.board = board;
             this.color = color;
             this.movQtty = 0;
+        }
 
+        public void move()
+        {
+            movQtty++;
         }
     }
 }
