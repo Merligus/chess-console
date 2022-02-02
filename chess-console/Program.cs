@@ -17,10 +17,15 @@ namespace chess_console
                     Console.Clear();
                     Display.printBoard(match.board);
 
-                    Console.WriteLine();
-                    Console.Write("Origin: ");
+                    Console.Write("\nOrigin: ");
                     Position origin = Display.readChessPosition().toPosition();
-                    Console.Write("Destiny: ");
+
+                    bool[,] possiblePositions = match.board.piece(origin).possibleMovements();
+
+                    Console.Clear();
+                    Display.printBoard(match.board, possiblePositions);
+
+                    Console.Write("\nDestiny: ");
                     Position destiny = Display.readChessPosition().toPosition();
 
                     match.execMove(origin, destiny);

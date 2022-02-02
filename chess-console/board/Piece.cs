@@ -1,6 +1,6 @@
 ﻿namespace board
 {
-    class Piece
+    abstract class Piece
     {
         public Position position { get; set; }
         public Color color { get; protected set; }
@@ -14,6 +14,14 @@
             this.color = color;
             this.movQtty = 0;
         }
+
+        protected bool canMove(Position pos)
+        {
+            Piece p = board.piece(pos);
+            return p == null || p.color != color;
+        }
+
+        public abstract bool[,] possibleMovements();
 
         public void move()
         {

@@ -37,12 +37,12 @@ namespace chess
             board.placePiece(new Rook(board, Color.White), new ChessPosition('e', 1).toPosition());
             board.placePiece(new King(board, Color.White), new ChessPosition('d', 1).toPosition());
 
-            board.placePiece(new Rook(board, Color.Black), new ChessPosition('c', 7).toPosition());
-            board.placePiece(new Rook(board, Color.Black), new ChessPosition('c', 8).toPosition());
-            board.placePiece(new Rook(board, Color.Black), new ChessPosition('d', 7).toPosition());
-            board.placePiece(new Rook(board, Color.Black), new ChessPosition('e', 7).toPosition());
-            board.placePiece(new Rook(board, Color.Black), new ChessPosition('e', 8).toPosition());
-            board.placePiece(new King(board, Color.Black), new ChessPosition('d', 8).toPosition());
+            //board.placePiece(new Rook(board, Color.Black), new ChessPosition('c', 7).toPosition());
+            //board.placePiece(new Rook(board, Color.Black), new ChessPosition('c', 8).toPosition());
+            //board.placePiece(new Rook(board, Color.Black), new ChessPosition('d', 7).toPosition());
+            //board.placePiece(new Rook(board, Color.Black), new ChessPosition('e', 7).toPosition());
+            //board.placePiece(new Rook(board, Color.Black), new ChessPosition('e', 8).toPosition());
+            board.placePiece(new King(board, Color.Black), new ChessPosition('d', 6).toPosition());
         }
     }
 }
