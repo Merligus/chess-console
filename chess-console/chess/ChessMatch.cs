@@ -128,6 +128,22 @@ namespace chess
                 throw new BoardException("Can not put own king in check");
             }
 
+            Piece p = board.piece(destiny);
+
+            // promotion
+            if (p is Pawn)
+            {
+                if ( (p.color == Color.White && destiny.row == 0) || 
+                     (p.color == Color.Black && destiny.row == 7) )
+                {
+                    p = board.deletePiece(destiny);
+                    pieces.Remove(p);
+                    Piece queen = new Queen(board, p.color);
+                    board.placePiece(queen, destiny);
+                    pieces.Add(queen);
+                }
+            }
+
             if (inCheck(enemy(playerColor)))
                 bInCheck = true;
             else
@@ -141,7 +157,6 @@ namespace chess
                 changePlayer();
             }
 
-            Piece p = board.piece(destiny);
             // en passant
             if (p is Pawn && (destiny.row == origin.row - 2 || destiny.row == origin.row + 2))
                 enPassantVulnerable = p;
@@ -267,13 +282,13 @@ namespace chess
             placeNewPiece('f', 8, new Bishop(board, Color.Black));
             placeNewPiece('g', 8, new Knight(board, Color.Black));
             placeNewPiece('h', 8, new Rook(board, Color.Black));
-            placeNewPiece('a', 4, new Pawn(board, Color.Black, this));
+            placeNewPiece('a', 7, new Pawn(board, Color.Black, this));
             placeNewPiece('b', 7, new Pawn(board, Color.Black, this));
             placeNewPiece('c', 7, new Pawn(board, Color.Black, this));
             placeNewPiece('d', 7, new Pawn(board, Color.Black, this));
-            placeNewPiece('e', 4, new Pawn(board, Color.Black, this));
+            placeNewPiece('e', 7, new Pawn(board, Color.Black, this));
             placeNewPiece('f', 7, new Pawn(board, Color.Black, this));
-            placeNewPiece('g', 4, new Pawn(board, Color.Black, this));
+            placeNewPiece('g', 7, new Pawn(board, Color.Black, this));
             placeNewPiece('h', 7, new Pawn(board, Color.Black, this));
 
             placeNewPiece('a', 1, new Rook(board, Color.White));
