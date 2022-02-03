@@ -4,9 +4,11 @@ namespace chess
 {
     class Pawn : Piece
     {
+        private ChessMatch match;
 
-        public Pawn(Board board, Color color) : base(board, color)
+        public Pawn(Board board, Color color, ChessMatch match) : base(board, color)
         {
+            this.match = match;
         }
 
         private bool enemyIn(Position pos)
@@ -39,6 +41,17 @@ namespace chess
                 pos.assignPosition(position.row - 1, position.column + 1);
                 if (board.validPosition(pos) && enemyIn(pos))
                     possibles[pos.row, pos.column] = true;
+
+                // en passant
+                if (position.row == 3)
+                {
+                    Position left = new Position(position.row, position.column - 1);
+                    if (board.validPosition(left) && enemyIn(left) && board.piece(left) == match.enPassantVulnerable)
+                        possibles[left.row - 1, left.column] = true;
+                    Position right= new Position(position.row, position.column + 1);
+                    if (board.validPosition(right) && enemyIn(right) && board.piece(right) == match.enPassantVulnerable)
+                        possibles[right.row - 1, right.column] = true;
+                }
             }
             else
             {
@@ -54,6 +67,17 @@ namespace chess
                 pos.assignPosition(position.row + 1, position.column + 1);
                 if (board.validPosition(pos) && enemyIn(pos))
                     possibles[pos.row, pos.column] = true;
+
+                // en passant
+                if (position.row == 4)
+                {
+                    Position left = new Position(position.row, position.column - 1);
+                    if (board.validPosition(left) && enemyIn(left) && board.piece(left) == match.enPassantVulnerable)
+                        possibles[left.row + 1, left.column] = true;
+                    Position right = new Position(position.row, position.column + 1);
+                    if (board.validPosition(right) && enemyIn(right) && board.piece(right) == match.enPassantVulnerable)
+                        possibles[right.row + 1, right.column] = true;
+                }
             }
 
             return possibles;
