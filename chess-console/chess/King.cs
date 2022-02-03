@@ -12,7 +12,6 @@ namespace chess
         public override bool[,] possibleMovements()
         {
             bool [,] possibles = new bool[board.rows, board.columns];
-
             Position pos = new Position(0, 0);
 
             // north
