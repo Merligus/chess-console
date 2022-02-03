@@ -39,11 +39,18 @@ namespace chess
         {
             board.validatePosition(pos);
             if (board.piece(pos) == null)
-                throw new BoardException($"No piece chosen");
+                throw new BoardException("No piece chosen");
             if (playerColor != board.piece(pos).color)
-                throw new BoardException($"Not a {playerColor} piece");
+                throw new BoardException("Not a {playerColor} piece");
             if (!board.piece(pos).anyPossibleMovement())
-                throw new BoardException($"Chosen piece has no possible movements");
+                throw new BoardException("Chosen piece has no possible movements");
+        }
+
+        public void validateDestiny(Position origin, Position destiny)
+        {
+            board.validatePosition(destiny);
+            if (!board.piece(origin).canMoveTo(destiny))
+                throw new BoardException("Invalid destiny position");
         }
 
         private void changePlayer()

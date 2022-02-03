@@ -30,6 +30,7 @@ namespace chess_console
 
                     Console.Write("\nDestiny: ");
                     Position destiny = Display.readChessPosition().toPosition();
+                    match.validateDestiny(origin, destiny);
 
                     match.play(origin, destiny);
                 }
