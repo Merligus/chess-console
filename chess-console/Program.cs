@@ -12,26 +12,29 @@ namespace chess_console
 
             while (!match.finished)
             {
+                bool[,] possiblePositions;
+
                 try
                 {
+                    // origin
                     Console.Clear();
-                    Display.printBoard(match.board);
-                    Console.WriteLine($"Round: {match.round}");
-                    Console.WriteLine($"Current player: {match.playerColor}");
-
+                    possiblePositions = new bool[match.board.rows, match.board.columns];
+                    Display.printMatch(match, possiblePositions);
+                    
                     Console.Write("\nOrigin: ");
                     Position origin = Display.readChessPosition().toPosition();
                     match.validateOrigin(origin);
 
-                    bool[,] possiblePositions = match.board.piece(origin).possibleMovements();
-
+                    // destiny
                     Console.Clear();
-                    Display.printBoard(match.board, possiblePositions);
+                    possiblePositions = match.board.piece(origin).possibleMovements();
+                    Display.printMatch(match, possiblePositions);
 
                     Console.Write("\nDestiny: ");
                     Position destiny = Display.readChessPosition().toPosition();
                     match.validateDestiny(origin, destiny);
 
+                    // play
                     match.play(origin, destiny);
                 }
                 catch (BoardException e)
