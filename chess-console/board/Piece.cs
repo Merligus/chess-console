@@ -26,6 +26,11 @@
             movQtty++;
         }
 
+        public void unmove()
+        {
+            movQtty--;
+        }
+
         public bool anyPossibleMovement()
         {
             bool[,] possibles = possibleMovements();

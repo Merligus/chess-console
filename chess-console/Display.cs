@@ -13,6 +13,8 @@ namespace chess_console
             printCapturedPieces(match);
             Console.WriteLine($"\nRound: {match.round}");
             Console.WriteLine($"Current player: {match.playerColor}");
+            if (match.bInCheck)
+                Console.WriteLine("In check");
         }
 
         public static void printCapturedPieces(ChessMatch match)

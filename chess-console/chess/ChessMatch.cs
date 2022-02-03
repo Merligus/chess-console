@@ -8,23 +8,25 @@ namespace chess
         public Board board { get; private set; }
         public int round;
         public Color playerColor;
-        public bool finished { get; private set; }
+        public bool bFinished { get; private set; }
         private HashSet<Piece> pieces;
         private HashSet<Piece> captured;
+        public bool bInCheck { get; private set; }
 
         public ChessMatch()
         {
             board = new Board(8, 8);
             round = 1;
             playerColor = Color.White;
-            finished = false;
+            bFinished = false;
             pieces = new HashSet<Piece>();
             captured = new HashSet<Piece>();
+            bInCheck = false;
 
             placePieces();
         }
 
-        public void execMove(Position origin, Position destiny)
+        public Piece execMove(Position origin, Position destiny)
         {
             Piece pAttack = board.deletePiece(origin);
             pAttack.move();
@@ -32,11 +34,35 @@ namespace chess
             board.placePiece(pAttack, destiny);
             if (pCaptured != null)
                 captured.Add(pCaptured);
+            return pCaptured;
+        }
+
+        public void undoMove(Position origin, Position destiny, Piece pCaptured)
+        {
+            Piece p = board.deletePiece(destiny);
+            p.unmove();
+            if (pCaptured != null)
+            {
+                board.placePiece(pCaptured, destiny);
+                captured.Remove(pCaptured);
+            }
+            board.placePiece(p, origin);
         }
 
         public void play(Position origin, Position destiny)
         {
-            execMove(origin, destiny);
+            Piece pCaptured = execMove(origin, destiny);
+            if (inCheck(playerColor))
+            {
+                undoMove(origin, destiny, pCaptured);
+                throw new BoardException("Can not put own king in check");
+            }
+
+            if (inCheck(enemy(playerColor)))
+                bInCheck = true;
+            else
+                bInCheck = false;
+
             round++;
             changePlayer();
         }
@@ -88,6 +114,37 @@ namespace chess
             return aux;
         }
 
+        private Color enemy(Color color)
+        {
+            if (color == Color.White)
+                return Color.Black;
+            else
+                return Color.White;
+        }
+
+        private Piece king(Color color)
+        {
+            foreach(Piece x in inGamePieces(color))
+                if (x is King)
+                    return x;
+            return null;
+        }
+
+        public bool inCheck(Color color)
+        {
+            Piece K = king(color);
+            if (K == null)
+                throw new BoardException($"No {color} king in the board");
+
+            foreach (Piece x in inGamePieces(enemy(color)))
+            {
+                bool[,] possibleMovements = x.possibleMovements();
+                if (possibleMovements[K.position.row, K.position.column])
+                    return true;
+            }
+            return false;
+        }
+
         public void placeNewPiece(char column, int row, Piece piece)
         {
             board.placePiece(piece, new ChessPosition(column, row).toPosition());
@@ -103,12 +160,12 @@ namespace chess
             placeNewPiece('e', 1, new Rook(board, Color.White));
             placeNewPiece('d', 1, new King(board, Color.White));
 
-            //board.placePiece(new Rook(board, Color.Black), new ChessPosition('c', 7).toPosition());
-            //board.placePiece(new Rook(board, Color.Black), new ChessPosition('c', 8).toPosition());
-            //board.placePiece(new Rook(board, Color.Black), new ChessPosition('d', 7).toPosition());
-            //board.placePiece(new Rook(board, Color.Black), new ChessPosition('e', 7).toPosition());
-            //board.placePiece(new Rook(board, Color.Black), new ChessPosition('e', 8).toPosition());
-            placeNewPiece('d', 6, new King(board, Color.Black));
+            placeNewPiece('c', 7, new Rook(board, Color.Black));
+            placeNewPiece('c', 8, new Rook(board, Color.Black));
+            placeNewPiece('d', 7, new Rook(board, Color.Black));
+            placeNewPiece('e', 7, new Rook(board, Color.Black));
+            placeNewPiece('e', 8, new Rook(board, Color.Black));
+            placeNewPiece('d', 8, new King(board, Color.Black));
         }
     }
 }

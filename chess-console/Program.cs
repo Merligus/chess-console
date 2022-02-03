@@ -10,7 +10,7 @@ namespace chess_console
         {
             ChessMatch match = new ChessMatch();
 
-            while (!match.finished)
+            while (!match.bFinished)
             {
                 bool[,] possiblePositions;
 
