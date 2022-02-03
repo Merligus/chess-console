@@ -12,9 +12,17 @@ namespace chess_console
             printBoard(match.board, possiblePositions);
             printCapturedPieces(match);
             Console.WriteLine($"\nRound: {match.round}");
-            Console.WriteLine($"Current player: {match.playerColor}");
-            if (match.bInCheck)
-                Console.WriteLine("In check");
+            if (!match.bFinished)
+            {
+                Console.WriteLine($"Current player: {match.playerColor}");
+                if (match.bInCheck)
+                    Console.WriteLine("In check");
+            }
+            else
+            {
+                Console.WriteLine("Checkmate!");
+                Console.WriteLine($"Winner: {match.playerColor}");
+            }
         }
 
         public static void printCapturedPieces(ChessMatch match)

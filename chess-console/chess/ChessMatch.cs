@@ -63,8 +63,13 @@ namespace chess
             else
                 bInCheck = false;
 
-            round++;
-            changePlayer();
+            if (verifyCheckmate(enemy(playerColor)))
+                bFinished = true;
+            else
+            {
+                round++;
+                changePlayer();
+            }
         }
 
         public void validateOrigin(Position pos)
@@ -81,7 +86,7 @@ namespace chess
         public void validateDestiny(Position origin, Position destiny)
         {
             board.validatePosition(destiny);
-            if (!board.piece(origin).canMoveTo(destiny))
+            if (!board.piece(origin).possibleMovement(destiny))
                 throw new BoardException("Invalid destiny position");
         }
 
@@ -145,6 +150,30 @@ namespace chess
             return false;
         }
 
+        public bool verifyCheckmate(Color color)
+        {
+            if (!inCheck(color))
+                return false;
+
+            foreach (Piece x in inGamePieces(color))
+            {
+                bool[,] possibleMovements = x.possibleMovements();
+                for (int i = 0; i < board.rows; i++)
+                    for (int j = 0; j < board.columns; j++)
+                        if (possibleMovements[i, j])
+                        {
+                            Position origin = x.position;
+                            Position destiny = new Position(i, j);
+                            Piece pCaptured = execMove(origin, destiny);
+                            bool verifyCheck = inCheck(color);
+                            undoMove(origin, destiny, pCaptured);
+                            if (!verifyCheck)
+                                return false;
+                        }
+            }
+            return true;
+        }
+
         public void placeNewPiece(char column, int row, Piece piece)
         {
             board.placePiece(piece, new ChessPosition(column, row).toPosition());
@@ -160,12 +189,14 @@ namespace chess
             placeNewPiece('e', 1, new Rook(board, Color.White));
             placeNewPiece('d', 1, new King(board, Color.White));
 
-            placeNewPiece('c', 7, new Rook(board, Color.Black));
-            placeNewPiece('c', 8, new Rook(board, Color.Black));
+            //placeNewPiece('c', 7, new Rook(board, Color.Black));
+            //placeNewPiece('c', 8, new Rook(board, Color.Black));
             placeNewPiece('d', 7, new Rook(board, Color.Black));
-            placeNewPiece('e', 7, new Rook(board, Color.Black));
-            placeNewPiece('e', 8, new Rook(board, Color.Black));
+            //placeNewPiece('e', 7, new Rook(board, Color.Black));
+            //placeNewPiece('e', 8, new Rook(board, Color.Black));
             placeNewPiece('d', 8, new King(board, Color.Black));
         }
     }
 }
+
+// possible movements do king deveria analisar se esta em check

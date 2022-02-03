@@ -9,11 +9,10 @@ namespace chess_console
         static void Main(string[] args)
         {
             ChessMatch match = new ChessMatch();
+            bool[,] possiblePositions;
 
             while (!match.bFinished)
             {
-                bool[,] possiblePositions;
-
                 try
                 {
                     // origin
@@ -48,6 +47,10 @@ namespace chess_console
                     break;
                 }
             }
+
+            Console.Clear();
+            possiblePositions = new bool[match.board.rows, match.board.columns];
+            Display.printMatch(match, possiblePositions);
         }
     }
 }
